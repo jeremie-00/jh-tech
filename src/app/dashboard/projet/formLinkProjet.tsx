@@ -11,7 +11,7 @@ import { useDeleteModal } from "../stateManagement/modalContext";
 
 export const ProjetLinkForm = ({ newForm }: { newForm: FullProjet }) => {
   const { openModal } = useDeleteModal();
-  const { isReset } = useFormulaire();
+  const { formState } = useFormulaire();
   const { mutateRemove } = useLinks();
   const [links, setLinks] = useState(
     () =>
@@ -27,10 +27,10 @@ export const ProjetLinkForm = ({ newForm }: { newForm: FullProjet }) => {
   );
 
   useEffect(() => {
-    if (isReset) {
+    if (formState.isReset) {
       setLinks([]); // Supprime tous les liens
     }
-  }, [isReset]);
+  }, [formState.isReset]);
 
   const isAddButtonDisabled = useMemo(() => links.length >= 2, [links]);
 

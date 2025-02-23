@@ -18,11 +18,11 @@ const initialLinkData: FullLink = {
 
 export default function FormLink() {
   const { datas } = useLinks();
-  const { isUpdate, idSelect, isReset, setIsReset } = useFormulaire();
+  const { formState, setFormState } = useFormulaire();
 
-  const data = datas.find((data) => data.id === idSelect);
+  const data = datas.find((data) => data.id === formState.idSelect);
   const [newForm, setNewForm] = useState(
-    isUpdate && data ? data : initialLinkData
+    formState.isUpdate && data ? data : initialLinkData
   );
 
   const [inNavToggle, setInNavToggle] = useState<boolean>(newForm.inNav);
@@ -36,11 +36,14 @@ export default function FormLink() {
   }, [datas, newForm.inNav, inNavToggle]);
 
   useEffect(() => {
-    if (isReset) {
+    if (formState.isReset) {
       setNewForm(initialLinkData);
-      setIsReset(false);
+      setFormState((prev) => ({
+        ...prev,
+        isReset: false,
+      }));
     }
-  }, [isReset, setIsReset]);
+  }, [formState.isReset, setFormState]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

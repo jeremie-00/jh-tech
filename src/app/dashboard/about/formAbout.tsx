@@ -49,7 +49,7 @@ export function FormAbout() {
   return (
     <>
       <h2 className="h2-form">A propos</h2>
-      <input type="hidden" name="id" defaultValue={formState.idSelect} />
+      <input type="hidden" name="id" defaultValue={newForm.id} />
 
       <input
         type="hidden"

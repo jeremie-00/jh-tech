@@ -17,19 +17,22 @@ const initialNotationData: NotationType = {
 export default function FormNotations() {
   const pages = RenderPagesName();
   const { datas } = useNotation();
-  const { isUpdate, idSelect, isReset, setIsReset } = useFormulaire();
+  const { formState, setFormState } = useFormulaire();
 
-  const data = datas.find((data) => data.id === idSelect);
+  const data = datas.find((data) => data.id === formState.idSelect);
   const [newForm, setNewForm] = useState(
-    isUpdate && data ? data : initialNotationData
+    formState.isUpdate && data ? data : initialNotationData
   );
 
   useEffect(() => {
-    if (isReset) {
+    if (formState.isReset) {
       setNewForm(initialNotationData);
-      setIsReset(false);
+      setFormState((prev) => ({
+        ...prev,
+        isReset: false,
+      }));
     }
-  }, [isReset, setIsReset]);
+  }, [formState.isReset, setFormState]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

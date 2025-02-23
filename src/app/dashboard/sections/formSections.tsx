@@ -13,19 +13,22 @@ export const initialSectionData: SectionType = {
 
 export default function FormSections() {
   const { datas } = useSections();
-  const { isUpdate, idSelect, isReset, setIsReset } = useFormulaire();
+  const { formState, setFormState } = useFormulaire();
 
-  const data = datas.find((data) => data.id === idSelect);
+  const data = datas.find((data) => data.id === formState.idSelect);
   const [newForm, setNewForm] = useState(
-    isUpdate && data ? data : initialSectionData
+    formState.isUpdate && data ? data : initialSectionData
   );
 
   useEffect(() => {
-    if (isReset) {
+    if (formState.isReset) {
       setNewForm(initialSectionData);
-      setIsReset(false);
+      setFormState((prev) => ({
+        ...prev,
+        isReset: false,
+      }));
     }
-  }, [isReset, setIsReset]);
+  }, [formState.isReset, setFormState]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -42,9 +45,9 @@ export default function FormSections() {
   return (
     <>
       <h2 className="h2-form">Titre section</h2>
-      <input type="hidden" name="id" value={idSelect} />
+      <input type="hidden" name="id" value={newForm.id} />
 
-      {isUpdate ? (
+      {formState.isUpdate ? (
         <label htmlFor="section" className="label-form">
           Sélectionner la section
           <select

@@ -13,22 +13,25 @@ export const initialSkillData: FullSkill = {
 
 export function FormSkills() {
   const { datas } = useSkills();
-  const { isUpdate, idSelect, isReset, setIsReset } = useFormulaire();
+  const { formState, setFormState } = useFormulaire();
 
-  const data = datas.find((data) => data.id === idSelect);
+  const data = datas.find((data) => data.id === formState.idSelect);
   const [newForm, setNewForm] = useState(
-    isUpdate && data ? data : initialSkillData
+    formState.isUpdate && data ? data : initialSkillData
   );
 
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
 
   useEffect(() => {
-    if (isReset) {
+    if (formState.isReset) {
       setNewForm(initialSkillData);
-      setIsReset(false);
       setImagePreview(null);
+      setFormState((prev) => ({
+        ...prev,
+        isReset: false,
+      }));
     }
-  }, [isReset, setIsReset]);
+  }, [formState.isReset, setFormState]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -41,7 +44,7 @@ export function FormSkills() {
   return (
     <>
       <h2 className="h2-form">Skills</h2>
-      <input type="hidden" name="id" defaultValue={idSelect} />
+      <input type="hidden" name="id" defaultValue={newForm.id} />
 
       <input
         type="hidden"

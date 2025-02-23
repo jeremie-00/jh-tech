@@ -18,10 +18,10 @@ export const initialAvatarData: FullAvatar = {
 export function FormAvatar() {
   const { datas } = useAvatar();
   const pages = RenderPagesName().filter((page) => page.inNav);
-  const { isUpdate, idSelect, isReset, setIsReset } = useFormulaire();
-  const data = datas.find((data) => data.id === idSelect);
+  const { formState, setFormState } = useFormulaire();
+  const data = datas.find((data) => data.id === formState.idSelect);
   const [newForm, setNewForm] = useState(
-    isUpdate && data ? data : initialAvatarData
+    formState.isUpdate && data ? data : initialAvatarData
   );
 
   const [imagePreview, setImagePreview] = React.useState<{
@@ -30,11 +30,14 @@ export function FormAvatar() {
   }>({ recto: null, verso: null });
 
   useEffect(() => {
-    if (isReset) {
+    if (formState.isReset) {
       setNewForm(initialAvatarData);
-      setIsReset(false);
+      setFormState((prev) => ({
+        ...prev,
+        isReset: false,
+      }));
     }
-  }, [isReset, setIsReset]);
+  }, [formState.isReset, setFormState]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -62,7 +65,7 @@ export function FormAvatar() {
   return (
     <>
       <h2 className="h2-form">Avatar</h2>
-      <input type="hidden" name="id" defaultValue={idSelect} />
+      <input type="hidden" name="id" defaultValue={newForm.id} />
 
       <input
         type="hidden"

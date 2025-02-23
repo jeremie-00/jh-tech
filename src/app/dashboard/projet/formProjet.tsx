@@ -27,15 +27,8 @@ export function FormProjet() {
   const { datas } = useProjets();
   const { datas: skills } = useSkills();
 
-  const {
-    isUpdate,
-    idSelect,
-    selectedSkills,
-    setSelectedSkills,
-    setIsProjet,
-    isReset,
-    setIsReset,
-  } = useFormulaire();
+  const { formState, setFormState, selectedSkills, setSelectedSkills } =
+    useFormulaire();
 
   const [imagePreview, setImagePreview] = useState({
     cover: null as string | null,
@@ -50,30 +43,36 @@ export function FormProjet() {
     }));
   }, [skills]);
 
-  const data = datas.find((data) => data.id === idSelect);
+  const data = datas.find((data) => data.id === formState.idSelect);
 
   const [newForm, setNewForm] = useState(
-    isUpdate && data ? data : initialProjetData
+    formState.isUpdate && data ? data : initialProjetData
   );
 
   useEffect(() => {
-    setIsProjet(true);
-  }, [setIsProjet]);
+    setFormState((prev) => ({
+      ...prev,
+      isProjet: true,
+    }));
+  }, [setFormState]);
 
   useEffect(() => {
-    if (isReset) {
+    if (formState.isReset) {
       setNewForm(initialProjetData);
       setSelectedSkills([]);
-      setIsReset(false);
+      setFormState((prev) => ({
+        ...prev,
+        isReset: false,
+      }));
       setImagePreview({
         cover: null,
         medias: [],
       });
     }
-  }, [isReset, setIsReset, setSelectedSkills]);
+  }, [formState.isReset, setFormState, setSelectedSkills]);
 
   useEffect(() => {
-    if (isUpdate && newForm.skills) {
+    if (formState.isUpdate && newForm.skills) {
       const initialSelectedSkills = newForm.skills
         .map((skillTitle) => {
           const skill = OPTIONS.find(
@@ -85,7 +84,7 @@ export function FormProjet() {
 
       setSelectedSkills(initialSelectedSkills);
     }
-  }, [isUpdate, newForm.skills, OPTIONS, setSelectedSkills]);
+  }, [formState.isUpdate, newForm.skills, OPTIONS, setSelectedSkills]);
 
   const handleSkillChange = (options: Option[]) => {
     setSelectedSkills(options);
@@ -107,7 +106,7 @@ export function FormProjet() {
   return (
     <>
       <h2 className="h2-form">Projet</h2>
-      <input type="hidden" name="id" defaultValue={idSelect} />
+      <input type="hidden" name="id" defaultValue={newForm.id} />
       <label htmlFor="title" className="label-form">
         Titre
         <input
@@ -164,7 +163,7 @@ export function FormProjet() {
       <label htmlFor="medias" className="label-form">
         Médias
         <ImagesManager
-          updated={isUpdate}
+          updated={formState.isUpdate}
           name="medias"
           url={newForm?.medias?.map((media) => media.url) || []}
           imagePreview={imagePreview.medias}

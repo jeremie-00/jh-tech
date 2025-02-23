@@ -18,17 +18,10 @@ interface FormState {
 }
 
 interface FormulaireContextProps {
-  isOpen: boolean;
-  isUpdate: boolean;
-  idSelect: string;
-  isReset: boolean;
-  isProjet: boolean;
   selectedSkills: Option[];
   formState: FormState;
   setFormState: Dispatch<SetStateAction<FormState>>;
   setSelectedSkills: Dispatch<SetStateAction<Option[]>>;
-  setIsReset: Dispatch<SetStateAction<boolean>>;
-  setIsProjet: Dispatch<SetStateAction<boolean>>;
   openFormulaire: (id?: string) => void;
   closeFormulaire: () => void;
 }
@@ -50,19 +43,9 @@ export function FormulaireProvider({
     isProjet: false,
   });
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false);
-  const [idSelect, setIdSelect] = useState("");
-  const [isReset, setIsReset] = useState(false);
   const [selectedSkills, setSelectedSkills] = useState<Option[]>([]);
-  const [isProjet, setIsProjet] = useState(false);
 
   const openFormulaire = (id?: string) => {
-    if (id) {
-      setIsUpdate(true);
-      setIdSelect(id);
-    }
-    setIsOpen(true);
     setFormState((prev) => ({
       ...prev,
       isOpen: true,
@@ -72,11 +55,6 @@ export function FormulaireProvider({
   };
 
   const closeFormulaire = () => {
-    setIsOpen(false);
-    setIsUpdate(false);
-    setIdSelect("");
-    setIsReset(false);
-    setIsProjet(false);
     setSelectedSkills([]);
     setFormState({
       isOpen: false,
@@ -90,17 +68,10 @@ export function FormulaireProvider({
   return (
     <FormulaireContext.Provider
       value={{
-        isOpen,
-        isUpdate,
-        idSelect,
-        isReset,
-        isProjet,
         selectedSkills,
         formState,
         setFormState,
         setSelectedSkills,
-        setIsReset,
-        setIsProjet,
         openFormulaire,
         closeFormulaire,
       }}
