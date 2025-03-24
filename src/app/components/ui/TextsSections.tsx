@@ -140,7 +140,9 @@ export default function TextsSection({
       )}
       {isAdmin && !isEditing && (
         <CustomBtn
-          className={"py-4 pl-0 max-md:place-self-center"}
+          className={
+            "py-4 pl-0 flex max-md:w-full max-md:items-center max-md:justify-center"
+          }
           iconName="edit"
           theme="icon"
           size="lg"

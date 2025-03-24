@@ -16,7 +16,7 @@ export default function NavBarre() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed bottom-[1rem] left-1/2 z-50 -translate-x-1/2 max-[450px]:w-full transition-all duration-300 ease-in-out "
+      className="fixed bottom-[1rem] left-1/2 z-50 -translate-x-1/2 max-[450px]:w-full max-[450px]:bottom-0 transition-all duration-300 ease-in-out "
     >
       <ul className="flex items-center justify-around gap-8 px-10 py-3 bg-accent custom-shadow-inner rounded-full backdrop-blur-sm max-[450px]:w-full max-[450px]:rounded-none max-[450px]:gap-4">
         {linksNav.map(({ section, title }, idx) => {

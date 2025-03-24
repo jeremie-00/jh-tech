@@ -50,7 +50,7 @@ export function LoginButton() {
       <CustomBtn
         className={`top-16 right-0 z-50 pl-3 border-r-0 rounded-tr-none rounded-br-none ${
           session?.user?.role === "admin"
-            ? "text-destructive border-destructive"
+            ? "text-destructive border-red-500"
             : ""
         }`}
         theme="sticky"
