@@ -13,92 +13,75 @@ model RevokedToken {
   createdAt DateTime @default(now()) // Date de création
 }
 
-model Image {
-  id            String  @id @default(cuid())
-  url           String  @unique
-  alt           String
-  skillId       String? @unique
-  skill         Skill?  @relation("SkillImage", fields: [skillId], references: [id], onDelete: Cascade)
-  aboutId       String? @unique
-  about         About?  @relation("AboutImage", fields: [aboutId], references: [id], onDelete: Cascade)
-  avatarRectoId String? @unique
-  avatarRecto   Avatar? @relation("AvatarRectoImage", fields: [avatarRectoId], references: [id], onDelete: Cascade)
-  avatarVersoId String? @unique
-  avatarVerso   Avatar? @relation("AvatarVersoImage", fields: [avatarVersoId], references: [id], onDelete: Cascade)
-  coverId       String? @unique
-  cover         Projet? @relation("CoverImage", fields: [coverId], references: [id], onDelete: Cascade)
-  mediasId      String?
-  medias        Projet? @relation("MediasImage", fields: [mediasId], references: [id], onDelete: Cascade)
+/**
+ * NEW DATASTORE
+ */
+
+model ImageSection {
+  id      String @id @default(uuid())
+  section String @unique
+  url     String
+  alt     String
+}
+
+model TextSection {
+  id      String  @id @default(uuid())
+  section String  @unique
+  name    String?
+  heading String
+  desc    String?
+  text    String
+}
+
+model Education {
+  id        String @id @default(uuid())
+  date      String
+  formation String
+  organisme String
+  text      String
+}
+
+model Experience {
+  id         String @id @default(uuid())
+  date       String
+  poste      String
+  entreprise String
+  text       String
+}
+
+model Service {
+  id    String @id @default(uuid())
+  name  String
+  text  String
+  url   String
+  alt   String
+  order Int
 }
 
 model Skill {
-  id     String   @id @default(uuid())
-  title  String
-  image  Image?   @relation("SkillImage")
-  projet Projet[]
-}
-
-model TextNotation {
-  id           String  @id @default(uuid())
-  page         String
-  order        Int
-  type         String?
-  text         String?
-  textNotation String?
-}
-
-model Section {
-  id      String  @id @default(uuid())
-  section String  @unique
-  title   String
-  text    String?
-}
-
-model About {
   id    String @id @default(uuid())
-  text  String
+  name  String
+  url   String
+  alt   String
+  work  Work[]
   order Int
-  image Image? @relation("AboutImage")
 }
 
-enum ArrowBullPosition {
-  topLeft
-  topRight
-  bottomLeft
-  bottomRight
-  middleTopLeft
-  middleTopRight
-  middleBottomLeft
-  middleBottomRight
+model LinkWork {
+  id     String  @id @default(uuid())
+  href   String
+  name   String
+  Work   Work?   @relation(fields: [workId], references: [id], onDelete: Cascade)
+  workId String?
 }
 
-model Avatar {
-  id                String            @id @default(uuid())
-  page              String            @unique
-  text              String
-  recto             Image?            @relation("AvatarRectoImage")
-  verso             Image?            @relation("AvatarVersoImage")
-  arrowBullPosition ArrowBullPosition
-}
-
-model Link {
-  id       String  @id @default(uuid())
-  href     String
-  title    String
-  page     String  @unique
-  inNav    Boolean @default(false)
-  order    Int
-  Projet   Projet? @relation(fields: [projetId], references: [id], onDelete: Cascade)
-  projetId String?
-}
-
-model Projet {
-  id        String  @id @default(uuid())
-  title     String
-  shortDesc String?
-  longDesc  String?
-  skills    Skill[]
-  links     Link[]
-  cover     Image?  @relation("CoverImage")
-  medias    Image[] @relation("MediasImage")
+model Work {
+  id     String     @id @default(uuid())
+  name   String
+  desc   String?
+  url    String
+  alt    String
+  skills Skill[]
+  links  LinkWork[]
+  order  Int
 }

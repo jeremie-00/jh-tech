@@ -1,49 +1,77 @@
 "use server";
 
-import { z } from "zod";
 import { zfd } from "zod-form-data";
 import prisma from "../lib/prisma";
 import { authActionClient } from "../lib/safe-action";
 import { Result } from "../types/globalType";
-import { FullSkill } from "../types/prismaType";
-import { deleteSchema } from "../types/zodType";
-import { imageDelete, imageUpload } from "./image.actions";
+import { SkillType } from "../types/prismaType";
+import { baseSchema, deleteSchema } from "../types/zodType";
+import { createImage } from "../utils/createdImage";
+import { imageDelete } from "./imageStorage.actions";
 
-export const getSkills = async (): Promise<FullSkill[]> => {
+const DEFAULT = {
+  url: "/default.svg",
+  alt: "Text alt image par default",
+  name: "Nom par default",
+  order: 1,
+};
+
+const MESSAGES = {
+  NOT_FOUND: "Compétence introuvable.",
+  ERROR_CREATE: "Erreur lors de la création de la compétence.",
+  ERROR_UPDATE: "Erreur lors de la mise à jour de la compétence.",
+  ERROR_DELETE: "Erreur lors de la suppression de la compétence.",
+  SUCCESS_CREATE: (name: string) =>
+    `La card compétence \"${name}\" a été créé avec succès ! 🚀`,
+  SUCCESS_UPDATE: (name: string) =>
+    `La card compétence \"${name}\" a été mis à jour avec succès ! 🚀`,
+  SUCCESS_DELETE: (name: string) =>
+    `La card compétence \"${name}\" a été supprimé avec succès ! 🚀`,
+};
+
+const skillSchema = {
+  create: zfd.formData({
+    name: baseSchema.text.default,
+    image: baseSchema.file.optional,
+    order: baseSchema.text.short,
+  }),
+
+  update: zfd.formData({
+    id: baseSchema.id.uuid,
+    name: baseSchema.text.default,
+    image: baseSchema.file.optional,
+    order: baseSchema.text.short,
+  }),
+};
+
+export const getSkills = async (): Promise<SkillType[]> => {
   return prisma.skill.findMany({
-    include: { image: true },
+    orderBy: {
+      order: "asc",
+    },
   });
 };
 
-export const getSkillById = async (id: string): Promise<FullSkill | null> => {
+export const getSkillById = async (id: string): Promise<SkillType | null> => {
   return prisma.skill.findUnique({
     where: { id },
-    include: { image: true },
   });
 };
 
-const skillSchemaCreate = zfd.formData({
-  title: z.string().nonempty("Vous devez fournir un titre"),
-  image: z.instanceof(File).optional(),
-});
-
 export const createSkill = authActionClient
-  .schema(skillSchemaCreate)
+  .schema(skillSchema.create)
   .action(async ({ parsedInput: { ...formData } }) => {
     try {
-      const { title, image } = formData;
-      const url =
-        image && image?.size > 0
-          ? await imageUpload({ title, file: image, folder: "skills" })
-          : null;
+      const { name, image, order } = formData;
+
+      const url = await createImage("SKILLS", image, name);
 
       const createdSkill = await prisma.skill.create({
         data: {
-          title,
-          image: url ? { create: { url, alt: `Logo de ${title}` } } : undefined,
-        },
-        include: {
-          image: true,
+          name: !name ? DEFAULT.name : name,
+          url: !url ? DEFAULT.url : url,
+          alt: !url ? DEFAULT.alt : `Logo de ${name}`,
+          order: !order ? DEFAULT.order : Number(order),
         },
       });
 
@@ -51,61 +79,43 @@ export const createSkill = authActionClient
         state: createdSkill,
         success: true,
         status: "success",
-        message: `La compétence \"${title}\" a été créée avec succès ! 🚀`,
+        message: MESSAGES.SUCCESS_CREATE(name),
       };
     } catch {
       return {
         success: false,
         status: "error",
-        message: "Erreur lors de la création de la compétence.",
+        message: MESSAGES.ERROR_CREATE,
       };
     }
-  }) as (formData: FormData) => Promise<Result<FullSkill>>;
-
-const skillSchemaUpdate = zfd.formData({
-  id: z.string().nonempty({ message: "Vous devez fournir un identifiant" }),
-  title: z.string().nonempty({ message: "Vous devez fournir un titre" }),
-  image: z.instanceof(File).optional(),
-});
+  }) as (formData: FormData) => Promise<Result<SkillType>>;
 
 export const updateSkill = authActionClient
-  .schema(skillSchemaUpdate)
+  .schema(skillSchema.update)
   .action(async ({ parsedInput: { ...formData } }) => {
     try {
-      const { id, title, image } = formData;
+      const { id, name, image, order } = formData;
       const existingSkill = await getSkillById(id);
 
       if (!existingSkill) {
         return {
           success: false,
           status: "warn",
-          message: "Compétence introuvable.",
+          message: MESSAGES.NOT_FOUND,
         };
       }
+      const url = await createImage("SKILLS", image, name);
 
-      const url =
-        image && image?.size > 0
-          ? await imageUpload({ title, file: image, folder: "skills" })
-          : undefined;
-
-      if (existingSkill?.image && url)
-        await imageDelete({ image: existingSkill.image });
+      if (existingSkill?.url && url)
+        await imageDelete({ image: existingSkill });
 
       const updatedSkill = await prisma.skill.update({
         where: { id },
         data: {
-          title,
-          image: url
-            ? {
-                upsert: {
-                  update: { url, alt: `Logo de ${title}` },
-                  create: { url, alt: `Logo de ${title}` },
-                },
-              }
-            : undefined,
-        },
-        include: {
-          image: true,
+          name,
+          url: url || existingSkill.url,
+          alt: `Logo de ${name}` || existingSkill.alt,
+          order: Number(order),
         },
       });
 
@@ -113,16 +123,16 @@ export const updateSkill = authActionClient
         state: updatedSkill,
         success: true,
         status: "success",
-        message: `La compétence \"${title}\" a été mise à jour avec succès ! 🚀`,
+        message: MESSAGES.SUCCESS_UPDATE(name),
       };
     } catch {
       return {
         success: false,
         status: "error",
-        message: "Erreur lors de la mise à jour de la compétence.",
+        message: MESSAGES.ERROR_UPDATE,
       };
     }
-  }) as (formData: FormData) => Promise<Result<FullSkill>>;
+  }) as (formData: FormData) => Promise<Result<SkillType>>;
 
 export const deleteSkill = authActionClient
   .schema(deleteSchema)
@@ -133,24 +143,24 @@ export const deleteSkill = authActionClient
         return {
           success: false,
           status: "warn",
-          message: "Compétence introuvable.",
+          message: MESSAGES.NOT_FOUND,
         };
       }
 
-      if (skill.image) await imageDelete({ image: skill.image });
+      if (skill) await imageDelete({ image: skill });
       await prisma.skill.delete({ where: { id: id } });
 
       return {
         state: skill,
         success: true,
         status: "success",
-        message: `La compétence \"${skill.title}\" a été supprimée avec succès ! 🚀`,
+        message: MESSAGES.SUCCESS_DELETE(skill.name),
       };
     } catch {
       return {
         success: false,
         status: "error",
-        message: "Erreur lors de la suppression de la compétence.",
+        message: MESSAGES.ERROR_DELETE,
       };
     }
-  }) as ({ id }: { id: string }) => Promise<Result<FullSkill>>;
+  }) as ({ id }: { id: string }) => Promise<Result<SkillType>>;

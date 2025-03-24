@@ -10,6 +10,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        title: "var(--font-title)",
+        body: "var(--font-body)",
+      },
       aspectRatio: {
         slider: "2.12",
         imgCardProjet: "1.25",
@@ -23,9 +27,20 @@ export default {
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        transition: "hsl(var(--transition-bg))",
-        section: "hsl(var(--section-bg))",
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
         border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -34,14 +49,18 @@ export default {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
         },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          popover: "hsl(var(--popover-foreground))",
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
+        ring: "hsl(var(--ring))",
+
+        transition: "hsl(var(--transition-bg))",
+        section: "hsl(var(--section-bg))",
       },
     },
   },
@@ -49,8 +68,9 @@ export default {
     plugin(function ({ addBase, addComponents, addUtilities }) {
       addBase({});
       addComponents({
+        /* OLD PORTFOLIO */
         ".form": {
-          "@apply relative w-full h-full flex flex-col bg-section gap-12 p-6 shadow-custom rounded-xl":
+          "@apply relative w-full h-full flex flex-col bg-background gap-12 p-6 shadow-custom rounded-xl":
             {},
         },
         ".label-form": {
@@ -84,14 +104,14 @@ export default {
           "@apply md:px-10 px-0 leading-loose text-center font-medium lg:text-[2rem] md:text-[1.75rem] sm:text-[1.5rem] text-[1.25rem]":
             {},
         },
-        input: {
-          "@apply w-full h-full p-2 bg-white/80 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in-out":
+        /*  input: {
+          "@apply w-full h-full p-2 bg-white/80 text-black shadow rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in-out":
             {},
-        },
-        textarea: {
-          "@apply w-full h-full p-2 bg-white/80 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in-out":
+        }, */
+        /* textarea: {
+          "@apply w-full h-full p-2 bg-white/80 text-black shadow rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in-out":
             {},
-        },
+        }, */
         select: {
           "@apply w-full h-full p-2 bg-white/80 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300 ease-in-out":
             {},
@@ -134,9 +154,56 @@ export default {
           "@apply absolute top-0 left-0 w-full h-full flex items-center justify-center gap-4 backdrop-blur-sm rounded-lg z-50":
             {},
         },
+
+        /* New port folio  */
+        ".custom-button": {
+          "@apply flex items-center justify-center transition-all duration-300 ease-in-out":
+            {},
+        },
+        ".custom-card": {
+          "@apply flex rounded-lg transition-all duration-300 ease-in-out": {},
+        },
+        ".custom-overlay-container": {
+          "@apply absolute z-40 inset-0 w-full scrollbar transition-opacity duration-500 overflow-x-hidden":
+            {},
+        },
+        ".custom-grid": {
+          "@apply grid lg:grid-cols-2 grid-cols-1 gap-8 pt-8 pb-24 px-8": {},
+        },
+        ".custom-flex-wrap": {
+          "@apply flex flex-wrap items-center justify-center gap-4 pt-8 pb-24 px-8":
+            {},
+        },
+        ".custom-shadow-inner": {
+          "@apply shadow-inner shadow-gray-300 dark:shadow-gray-900": {},
+        },
+        ".custom-blob": {
+          "@apply blob absolute bottom-0 left-[-2rem] w-[120%] h-[60%] bg-primary border-2 border-foreground shadow-inner shadow-gray-900":
+            {},
+        },
+        ".custom-form": {
+          "@apply relative w-full h-full flex flex-col gap-6": {},
+        },
+        ".custom-input": {
+          "@apply w-full h-full p-2 bg-input text-black shadow-md rounded-lg focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 ease-in-out":
+            {},
+        },
       });
 
       addUtilities({
+        /* New port folio  */
+        ".clip-custom": {
+          clipPath:
+            "polygon(100% 0, 100% 49%, 100% 100%, 25% 100%, 50% 50%, 25% 0)",
+        },
+        ".clip-custom1": {
+          clipPath:
+            "polygon(24.5% 0, 49.5% 50%, 24.5% 100%, 25% 100%, 50% 50%, 25% 0)",
+        },
+        ".blob": {
+          borderRadius: "50% 40% 60% 30% / 40% 50% 30% 60%",
+        },
+        /* OLD PORTFOLIO */
         ".clip-triangle": {
           clipPath: "polygon(20% 0%, 0% 0%, 0% 50%)",
         },

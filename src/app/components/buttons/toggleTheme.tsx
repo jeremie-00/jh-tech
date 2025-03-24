@@ -1,10 +1,10 @@
 "use client";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { IoMoonOutline, IoSunnyOutline } from "react-icons/io5";
-import { Button } from "./buttons";
+import { CustomBtn } from "./customButtons";
 
-export default function ToggleTheme() {
+export function ToggleTheme() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -12,9 +12,9 @@ export default function ToggleTheme() {
     setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     setTheme(theme === "light" ? "dark" : "light");
-  };
+  }, [theme, setTheme]);
 
   if (!mounted) {
     return (
@@ -24,9 +24,11 @@ export default function ToggleTheme() {
       />
     );
   }
+
   return (
-    <Button
-      theme="icon"
+    <CustomBtn
+      className="top-4 right-0 z-10 pl-3 border-r-0 rounded-tr-none rounded-br-none"
+      theme="sticky"
       onClick={toggleTheme}
       ariaLabel="Basculer entre le thème clair et sombre"
     >
@@ -35,6 +37,6 @@ export default function ToggleTheme() {
       ) : (
         <IoSunnyOutline className="size-[1.5rem]" />
       )}
-    </Button>
+    </CustomBtn>
   );
 }

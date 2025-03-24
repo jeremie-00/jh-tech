@@ -1,25 +1,28 @@
-import { ThemeProvider } from "@/app/providers/themeProvider";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider } from "@/app/components/providers/themeProvider";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import Footer from "./components/pages/footer";
-import SessionWrapper from "./providers/sessionWrapper";
+import { Phudu, Poppins } from "next/font/google";
+import SessionWrapper from "./components/providers/sessionWrapper";
 import { ToastNotification } from "./components/toast";
-import { StairTransition } from "./components/transitionPages/stairTransition";
-import { Transitions } from "./components/transitionPages/transitions";
 
-import Header from "./components/header/header";
-import { ParticlesBackground } from "./components/particles";
-import { QueryProvider } from "./providers/queryProvider";
+import { Suspense } from "react";
+import { LoginButton } from "./components/buttons/loginButton";
+import { ToggleTheme } from "./components/buttons/toggleTheme";
+import { QueryProvider } from "./components/providers/queryProvider";
+import MatrixEffect from "./components/ui/MatrixEffect";
 import "./globals.css";
-import { ParallaxProviders } from "./providers/parallaxProvider";
-import { ParticlesProvider } from "./providers/particlesProvider";
-const geistSans = Geist({
+import LoadingScreen from "./components/ui/LoadingScreen";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
+
+const roboto = Poppins({
+  weight: ["400"],
   subsets: ["latin"],
+  variable: "--font-body",
 });
 
-const geistMono = Geist_Mono({
+const phudu = Phudu({
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
+  variable: "--font-title",
 });
 
 export const metadata: Metadata = {
@@ -27,12 +30,16 @@ export const metadata: Metadata = {
   description:
     "Explorez le portfolio de Jérémie Hérault, développeur web spécialisé en React, Next.js et TailwindCSS. Découvrez des projets modernes, interactifs et performants.",
   keywords: [
+    "dev web",
+    "dev full-stack",
+    "développeur",
     "développeur web",
     "portfolio développeur",
     "React",
     "Next.js",
     "TailwindCSS",
     "Jérémie Hérault",
+    "Hérault Jérémie",
     "applications web",
     "développement front-end",
     "développement back-end",
@@ -80,37 +87,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SessionWrapper>
-      <html lang="fr" suppressHydrationWarning>
-        <body
-          className={`${geistSans.className} ${geistMono.className} relative antialiased`}
-        >
+    <html lang="fr">
+      <body
+        className={`${phudu.variable} ${roboto.variable} antialiased bg-[#000]`}
+      >
+        <SessionWrapper>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
-            <ParticlesProvider>
-              <QueryProvider>
-                <Header />
-                <main className="flex min-h-svh flex-col items-center">
-                  <StairTransition />
-                  <Transitions>
-                    <ParallaxProviders>
-                      <ParticlesBackground />
-                      {children}
-                    </ParallaxProviders>
-                    <SpeedInsights />
-                  </Transitions>
-                </main>
-                <ToastNotification />
-                <Footer />
-              </QueryProvider>
-            </ParticlesProvider>
+            <QueryProvider>
+              <main>
+                <MatrixEffect />
+                <ToggleTheme />
+                <LoginButton />
+                <ErrorBoundary>
+                  <Suspense fallback={<LoadingScreen />}>{children}</Suspense>
+                </ErrorBoundary>
+              </main>
+              <ToastNotification />
+            </QueryProvider>
           </ThemeProvider>
-        </body>
-      </html>
-    </SessionWrapper>
+        </SessionWrapper>
+      </body>
+    </html>
   );
 }

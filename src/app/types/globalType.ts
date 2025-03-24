@@ -19,3 +19,9 @@ export type Result<T> = {
 export type ColumnsProps = {
   handleShowFormForUpdate: (id: string) => void;
 };
+
+export type ImageGlobalType = {
+  id: string;
+  url: string;
+  alt: string;
+};
