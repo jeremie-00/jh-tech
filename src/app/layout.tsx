@@ -1,17 +1,17 @@
 import { ThemeProvider } from "@/app/components/providers/themeProvider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Phudu, Poppins } from "next/font/google";
-import SessionWrapper from "./components/providers/sessionWrapper";
-import { ToastNotification } from "./components/toast";
-
 import { Suspense } from "react";
 import { LoginButton } from "./components/buttons/loginButton";
 import { ToggleTheme } from "./components/buttons/toggleTheme";
 import { QueryProvider } from "./components/providers/queryProvider";
+import SessionWrapper from "./components/providers/sessionWrapper";
+import { ToastNotification } from "./components/toast";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
+import LoadingScreen from "./components/ui/LoadingScreen";
 import MatrixEffect from "./components/ui/MatrixEffect";
 import "./globals.css";
-import LoadingScreen from "./components/ui/LoadingScreen";
-import ErrorBoundary from "./components/ui/ErrorBoundary";
 
 const roboto = Poppins({
   weight: ["400"],
@@ -108,6 +108,7 @@ export default function RootLayout({
                 <ErrorBoundary>
                   <Suspense fallback={<LoadingScreen />}>{children}</Suspense>
                 </ErrorBoundary>
+                <SpeedInsights />
               </main>
               <ToastNotification />
             </QueryProvider>
