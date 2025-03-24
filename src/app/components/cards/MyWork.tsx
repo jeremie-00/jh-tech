@@ -1,6 +1,6 @@
 import { CustomBtn } from "@/app/components/buttons/customButtons";
 import { useWork } from "@/app/pages/stores/useWork";
-import { WorkType } from "@/app/types/prismaType";
+import { LinkWorkType, SkillType, WorkType } from "@/app/types/prismaType";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState } from "react";
@@ -46,18 +46,18 @@ function MyWorkCards({
         <p>{work.desc}</p>
 
         <div className="w-full flex flex-wrap content-start gap-2 mt-4">
-          {work.skills?.map((skill, i) => (
-            <Badge key={i} variant="default">
+          {work.skills?.map((skill: SkillType, idx: number) => (
+            <Badge key={idx} variant="default">
               {skill.name}
             </Badge>
           ))}
         </div>
         <div className="w-full flex flex-wrap content-start gap-2 pt-8">
-          {work.links.map((link, index) => {
+          {work.links.map((link: LinkWorkType, idx: number) => {
             const isGithub = link.name === "Github repository";
             if (link.href === "") return null;
             return (
-              <span key={index} className={`relative group`}>
+              <span key={idx} className={`relative group`}>
                 <CustomBtn
                   href={link.href}
                   target={true}

@@ -1,7 +1,7 @@
 import { useDeleteModal } from "@/app/contexts/modalDeleteContext";
 import { useSkill } from "@/app/pages/stores/useSkill";
 import { useWork } from "@/app/pages/stores/useWork";
-import { WorkType } from "@/app/types/prismaType";
+import { SkillType, WorkType } from "@/app/types/prismaType";
 import Form from "next/form";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -61,7 +61,7 @@ export const FormulaireWork = ({ workId, setIsEditing }: FormWorkProps) => {
   useEffect(() => {
     if (!newForm?.skills) return;
     const initialSelectedSkills = newForm.skills
-      .map((skillTitle) => {
+      .map((skillTitle: SkillType) => {
         const skill = OPTIONS.find(
           (option) => option.value === skillTitle.name
         );

@@ -1,16 +1,6 @@
 import { Prisma } from "@prisma/client";
 
-/* export type FullProject = Prisma.ProjectGetPayload<{
-  include: {
-    skills: true;
-    links: true;
-    cover: true;
-    medias: true;
-  };
-}>; */
-
-/* NEW DATASTORE */
-
+export type LinkWorkType = Prisma.LinkWorkGetPayload<true>;
 export type ImgSectionType = Prisma.ImageSectionGetPayload<true>;
 export type TxtSectionType = Prisma.TextSectionGetPayload<true>;
 export type EducationType = Prisma.EducationGetPayload<true>;
