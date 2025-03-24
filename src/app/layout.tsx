@@ -30,6 +30,8 @@ export const metadata: Metadata = {
   description:
     "Explorez le portfolio de Jérémie Hérault, développeur web spécialisé en React, Next.js et TailwindCSS. Découvrez des projets modernes, interactifs et performants.",
   keywords: [
+    "jh-tech",
+    "portfolio",
     "dev web",
     "dev full-stack",
     "développeur",
