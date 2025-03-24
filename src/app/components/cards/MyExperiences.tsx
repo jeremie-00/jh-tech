@@ -20,7 +20,7 @@ function MyExperienceCards({
   return datas.map((exp, idx) => (
     <CustomCard
       key={idx}
-      className="flex-col h-auto w-full gap-4 p-6 shadow"
+      className="flex-col h-full w-full gap-4 p-6 shadow"
       theme="default"
     >
       {isAdmin && (
