@@ -18,36 +18,38 @@ export const Buttons = ({ isGrouped }: { isGrouped: boolean }) => {
   const { activeSection, setActiveSection } = useRotation();
   return (
     <>
-      {buttons.map(({ href, text, title, download, target, theme }, index) => {
-        const iconName = title.toLowerCase() as IconName;
-        const textHover = isGrouped && capitalize(title);
-        return (
-          <span key={index} className={`relative group`}>
-            <CustomBtn
-              href={href !== "#contact" ? href : ""}
-              target={target}
-              download={download ? text : undefined}
-              theme={theme as ThemeName}
-              size="lg"
-              iconName={iconName}
-              onClick={
-                href !== "#contact"
-                  ? () => {}
-                  : () =>
-                      setActiveSection({
-                        idx: 4,
-                        prevIdx: activeSection.idx,
-                        section: "contact",
-                      })
-              }
-            >
-              <span className="text-[1rem]">{text}</span>
-              <span className="sr-only">{text}</span>
-            </CustomBtn>
-            {textHover && <ToolTip txt={textHover} />}
-          </span>
-        );
-      })}
+      {buttons.map(
+        ({ href, text, textSr, title, download, target, theme }, index) => {
+          const iconName = title.toLowerCase() as IconName;
+          const textHover = isGrouped && capitalize(title);
+          return (
+            <span key={index} className={`relative group`}>
+              <CustomBtn
+                href={href !== "#contact" ? href : ""}
+                target={target}
+                download={download ? text : undefined}
+                theme={theme as ThemeName}
+                size="lg"
+                iconName={iconName}
+                onClick={
+                  href !== "#contact"
+                    ? () => {}
+                    : () =>
+                        setActiveSection({
+                          idx: 4,
+                          prevIdx: activeSection.idx,
+                          section: "contact",
+                        })
+                }
+              >
+                <span className="text-[1rem]">{text}</span>
+                <span className="sr-only">{textSr}</span>
+              </CustomBtn>
+              {textHover && <ToolTip txt={textHover} />}
+            </span>
+          );
+        }
+      )}
     </>
   );
 };

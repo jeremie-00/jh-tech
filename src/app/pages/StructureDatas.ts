@@ -70,6 +70,7 @@ export const buttonsData = [
     title: "download",
     download: true,
     theme: "primary_hover",
+    textSr: "Télécharger mon CV",
   },
   {
     inNav: false,
@@ -78,6 +79,7 @@ export const buttonsData = [
     title: "contact",
     download: false,
     theme: "round",
+    textSr: "Naviger vers le formulaire de contact",
   },
   {
     inNav: false,
@@ -87,6 +89,7 @@ export const buttonsData = [
     download: false,
     target: true,
     theme: "round",
+    textSr: "Naviger vers la page de mon profil GitHub",
   },
 ];
 
