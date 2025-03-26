@@ -61,6 +61,12 @@ export default {
 
         transition: "hsl(var(--transition-bg))",
         section: "hsl(var(--section-bg))",
+
+        chart_1: "hsl(var(--chart-1))",
+        chart_2: "hsl(var(--chart-2))",
+        chart_3: "hsl(var(--chart-3))",
+        chart_4: "hsl(var(--chart-4))",
+        chart_5: "hsl(var(--chart-5))",
       },
     },
   },
@@ -188,6 +194,14 @@ export default {
           "@apply w-full h-full p-2 bg-input text-black shadow-md rounded-lg focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 ease-in-out":
             {},
         },
+        /* MOBILE */
+        ".mobile-button": {
+          "@apply absolute w-full h-full flex items-center justify-center transition-all duration-300 ease-in-out":
+            {},
+        },
+        ".mobile-banner": {
+          "@apply bg-card py-6 w-full shadow-custom overflow-hidden": {},
+        },
       });
 
       addUtilities({
@@ -203,9 +217,10 @@ export default {
         ".blob": {
           borderRadius: "50% 40% 60% 30% / 40% 50% 30% 60%",
         },
-        /* OLD PORTFOLIO */
-        ".clip-triangle": {
-          clipPath: "polygon(20% 0%, 0% 0%, 0% 50%)",
+        /* MOBILE */
+        ".mobile-clip-custom": {
+          clipPath:
+            "polygon(45% 30px, 100% 0px, 100% 35%, 100% 100%, 0 100%, 0 30px, 45% 0)",
         },
       });
     }),
